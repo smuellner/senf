@@ -1,6 +1,6 @@
 #  ---------------------------------------------------------------------------
 #
-#  Description:  This file holds all my ZSH configurations and aliases
+#  Description:  This file holds all my BASH configurations and aliases
 #
 #  Sections:
 #  1.   Exports
@@ -9,7 +9,6 @@
 #  4.   Base JDK
 #  5.   Including powerline shell
 #  6.   Including path_helper
-#  7.   Including oh-my-zsh
 #
 #  ---------------------------------------------------------------------------
 
@@ -47,10 +46,3 @@ source ~/.env/powerline-shell.sh
 #   6.  INCLUDING PATH_HELPER
 #   -------------------------------
 source ~/.env/path_helper.sh
-
-
-#   -------------------------------
-#   7.  INCLUDING OH-MY-ZSH
-#   -------------------------------
-source ~/.env/oh-my-zsh.sh
-
