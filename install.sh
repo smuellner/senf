@@ -27,7 +27,7 @@ fi
 
 ###
 # powerline fonts
-cd ~Downloads
+cd ~/Downloads
 # clone
 git clone https://github.com/powerline/fonts.git --depth=1
 # install
