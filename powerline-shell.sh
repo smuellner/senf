@@ -1,9 +1,16 @@
-if [ -f "/usr/local/bin/powerline-shell" ]; then
+#!/bin/bash
+powerline_shell="/usr/local/bin/powerline-shell"
+
+if [ ! -f ${powerline_shell} ]; then
+	powerline_shell=$(find ~/Library/Python/*/bin -name powerline-shell -print | head -n 1)
+fi
+
+if test -f "${powerline_shell}"; then
 	if [ -n "$ZSH_VERSION" ]; then
 		echo "✅ powerline-shell (zsh)"
 		
 		function powerline_precmd() {
-			PS1="$(/usr/local/bin/powerline-shell --shell zsh $?)"
+			PS1="$(${powerline_shell}  --shell zsh $?)"
 		}
 		
 		function install_powerline_precmd() {
@@ -22,7 +29,7 @@ if [ -f "/usr/local/bin/powerline-shell" ]; then
 		echo "✅ powerline-shell (bash)"
 		
 		function _update_ps1() {
-			PS1=$(powerline-shell $?)
+			PS1="$(${powerline_shell} $?)"
 		}
 		
 		if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then

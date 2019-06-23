@@ -1,29 +1,42 @@
  #!/bin/sh
 
 ###
-# pip
-easy_install=$(which easy_install)
-pip3=$(which pip3)
-pip=$(which pip)
+# python, pip
+python --version
+python -m ensurepip --default-pip --upgrade --user
+python -m pip install --upgrade pip setuptools wheel --user
 
-if [[ -x "${pip3}" ]]; then
-	$pip3 install --upgrade pip
-else
-	$easy_install pip
-fi
-
-pip install --upgrade pip
+pip install --upgrade pip --user
 	
 ###
 # powerline-shell
-powerline_shell=$(which powerline-shell)
-if [[ -x "${powerline_shell}" ]]; then
+
+powerline_shell="/usr/local/bin/powerline-shell"
+
+if [ ! -f ${powerline_shell} ]; then
+	powerline_shell=$(find ~/Library/Python/*/bin -name powerline-shell -print | head -n 1)
+fi
+
+if test -f ${powerline_shell}; then
     echo "✅ ${powerline_shell} already installed"
 else
-    echo "⚙️ Installing powerline-shell"
-	pip install powerline-shell
+    echo "⚙️  Installing powerline-shell"
+    echo ${powerline_shell}
+    pip install powerline-shell --user
 fi
-	
+
+###
+# powerline fonts
+cd ~Downloads
+# clone
+git clone https://github.com/powerline/fonts.git --depth=1
+# install
+cd fonts
+./install.sh
+# clean-up a bit
+cd ..
+rm -rf fonts
+cd
 
 ###
 # bash
@@ -34,7 +47,7 @@ if test -f "${bashrc}"; then
     if grep -q "${env_bashrc}" "${bashrc}"; then
     	echo "✅ ${env_bashrc} already sourced"
     else
-    	echo "⚙️ Sourcing ${env_bashrc}"
+    	echo "⚙️  Sourcing ${env_bashrc}"
     	echo "" >> ${bashrc}
     	echo "# Including env_bashrc" >> ${bashrc}
     	echo "test -e \"${env_bashrc}\" && source \"${env_bashrc}\"" >> ${bashrc}
@@ -52,7 +65,7 @@ if test -f "${zshrc}"; then
     if grep -q "${env_zshrrc}" "${zshrc}"; then
     	echo "✅ ${env_zshrrc} already sourced"
     else
-    	echo "⚙️ Sourcing ${env_zshrrc}"
+    	echo "⚙️  Sourcing ${env_zshrrc}"
     	echo "" >> ${zshrc}
     	echo "# Including env zshrc" >> ${zshrc}
     	echo "test -e \"${env_zshrrc}\" && source \"${env_zshrrc}\"" >> ${zshrc}
