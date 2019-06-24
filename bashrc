@@ -10,6 +10,7 @@
 #  5.   Set Base JDK
 #  6.   Including powerline shell
 #  7.   Including path_helper
+#  8.   Errors
 #
 #  ---------------------------------------------------------------------------
 
@@ -53,3 +54,9 @@ source ~/.env/powerline-shell.sh
 #   7.  INCLUDING PATH_HELPER
 #   -------------------------------
 source ~/.env/path_helper.sh
+
+
+#   -------------------------------
+#   8.  ERROR SUMMARY
+#   -------------------------------
+senfErrorSummary

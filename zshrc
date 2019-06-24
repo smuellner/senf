@@ -11,6 +11,7 @@
 #  6.   Including powerline shell
 #  7.   Including path_helper
 #  8.   Including oh-my-zsh
+#  9.   Errors
 #
 #  ---------------------------------------------------------------------------
 
@@ -61,3 +62,8 @@ source ~/.env/path_helper.sh
 #   -------------------------------
 source ~/.env/oh-my-zsh.sh
 
+
+#   -------------------------------
+#   9.  ERROR SUMMARY
+#   -------------------------------
+senfErrorSummary

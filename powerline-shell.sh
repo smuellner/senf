@@ -7,7 +7,6 @@ fi
 
 if test -f "${powerline_shell}"; then
 	if [ -n "$ZSH_VERSION" ]; then
-		echo "✅ powerline-shell (zsh)"
 
 		function powerline_precmd() {
 			PS1="$(${powerline_shell} --shell zsh $?)"
@@ -25,8 +24,10 @@ if test -f "${powerline_shell}"; then
 		if [ "$TERM" != "linux" ]; then
 			install_powerline_precmd
 		fi
+
+		addSenf "powerline-shell (zsh)"
+
 	elif [ -n "$BASH_VERSION" ]; then
-		echo "✅ powerline-shell (bash)"
 
 		function _update_ps1() {
 			PS1="$(${powerline_shell} $?)"
@@ -35,10 +36,12 @@ if test -f "${powerline_shell}"; then
 		if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
 			PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 		fi
+		
+		addSenf "powerline-shell (bash)"
+
 	else
-		echo "❓ shell not supoorted ${SHELL}"
+		senfError "Shell not supoorted ${SHELL}"
 	fi
 else
-	echo "❓ Missing powerline-shell install."
-	echo "👟 Run ~/.env/install.sh"
+	senfInstallError "Missing powerline-shell install."
 fi

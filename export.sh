@@ -7,20 +7,6 @@ export BLOCKSIZE=1k
 #   ------------------------------------------------------------
 export LANG=en_US.UTF-8
 
-#   Helper functions
-#   ------------------------------------------------------------
-function setPath() {
-	if [[ -d $1 ]]; then
-		export PATH=$PATH:$1
-	fi
-}
-
-function setLdLibraryPath() {
-	if [ -d $1 ]; then
-		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$1
-	fi
-}
-
 #   Set Paths
 #   ------------------------------------------------------------
 setPath "/bin"

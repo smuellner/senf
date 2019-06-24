@@ -1,7 +1,5 @@
 if [ -d "$HOME/.oh-my-zsh" ]; then
 
-	echo "✅ oh-my-zsh"
-
 	# Path to your oh-my-zsh installation.
 	export ZSH=$HOME/.oh-my-zsh
 
@@ -107,7 +105,7 @@ if [ -d "$HOME/.oh-my-zsh" ]; then
 	# alias zshconfig="mate ~/.zshrc"
 	# alias ohmyzsh="mate ~/.oh-my-zsh"
 
+	addSenf "oh-my-zsh"
 else
-	echo "❓ Missing oh-my-zsh install."
-	echo "👟 Run ~/.env/install.sh"
+	senfInstallError "Missing oh-my-zsh install."
 fi

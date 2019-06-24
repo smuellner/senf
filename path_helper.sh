@@ -1,7 +1,6 @@
 if [ -f "/usr/libexec/path_helper" ]; then
-	echo "✅ path_helper"
 	eval $(/usr/libexec/path_helper -s)
+	addSenf "path_helper"
 else
-	echo "❓ Missing path_helper install."
-	echo "👟 Run ~/.env/install.sh"
+	senfInstallError "Missing path_helper install."
 fi
