@@ -1,4 +1,4 @@
- #!/bin/sh
+#!/bin/sh
 
 ###
 # python, pip
@@ -7,7 +7,7 @@ python -m ensurepip --default-pip --upgrade --user
 python -m pip install --upgrade pip setuptools wheel --user
 
 pip install --upgrade pip --user
-	
+
 ###
 # powerline-shell
 
@@ -18,11 +18,11 @@ if [ ! -f ${powerline_shell} ]; then
 fi
 
 if test -f ${powerline_shell}; then
-    echo "✅ ${powerline_shell} already installed"
+	echo "✅ ${powerline_shell} already installed"
 else
-    echo "⚙️  Installing powerline-shell"
-    echo ${powerline_shell}
-    pip install powerline-shell --user
+	echo "⚙️  Installing powerline-shell"
+	echo ${powerline_shell}
+	pip install powerline-shell --user
 fi
 
 ###
@@ -44,16 +44,16 @@ bashrc="${HOME}/.bashrc"
 env_bashrc="\${HOME}/.env/bashrc"
 
 if test -f "${bashrc}"; then
-    if grep -q "${env_bashrc}" "${bashrc}"; then
-    	echo "✅ ${env_bashrc} already sourced"
-    else
-    	echo "⚙️  Sourcing ${env_bashrc}"
-    	echo "" >> ${bashrc}
-    	echo "# Including env_bashrc" >> ${bashrc}
-    	echo "test -e \"${env_bashrc}\" && source \"${env_bashrc}\"" >> ${bashrc}
+	if grep -q "${env_bashrc}" "${bashrc}"; then
+		echo "✅ ${env_bashrc} already sourced"
+	else
+		echo "⚙️  Sourcing ${env_bashrc}"
+		echo "" >>${bashrc}
+		echo "# Including env_bashrc" >>${bashrc}
+		echo "test -e \"${env_bashrc}\" && source \"${env_bashrc}\"" >>${bashrc}
 	fi
-else	
-    echo "❌ ${env_bashrc} does not exist"
+else
+	echo "❌ ${env_bashrc} does not exist"
 fi
 
 ###
@@ -62,18 +62,17 @@ zshrc=${HOME}/.zshrc
 env_zshrrc="\${HOME}/.env/zshrc"
 
 if test -f "${zshrc}"; then
-    if grep -q "${env_zshrrc}" "${zshrc}"; then
-    	echo "✅ ${env_zshrrc} already sourced"
-    else
-    	echo "⚙️  Sourcing ${env_zshrrc}"
-    	echo "" >> ${zshrc}
-    	echo "# Including env zshrc" >> ${zshrc}
-    	echo "test -e \"${env_zshrrc}\" && source \"${env_zshrrc}\"" >> ${zshrc}
+	if grep -q "${env_zshrrc}" "${zshrc}"; then
+		echo "✅ ${env_zshrrc} already sourced"
+	else
+		echo "⚙️  Sourcing ${env_zshrrc}"
+		echo "" >>${zshrc}
+		echo "# Including env zshrc" >>${zshrc}
+		echo "test -e \"${env_zshrrc}\" && source \"${env_zshrrc}\"" >>${zshrc}
 	fi
-else	
-    echo "❌ ${zshrc} does not exist"
+else
+	echo "❌ ${zshrc} does not exist"
 fi
-
 
 ###
 # oh-my-zsh

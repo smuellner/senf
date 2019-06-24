@@ -3,54 +3,61 @@
 #  Description:  This file holds all my ZSH configurations and aliases
 #
 #  Sections:
-#  1.   Exports
-#  2.   Aliases 
-#  3.   General and often used functions
-#  4.   Base JDK
-#  5.   Including powerline shell
-#  6.   Including path_helper
-#  7.   Including oh-my-zsh
+#  1.   Core functions 
+#  2.   Exports
+#  3.   Aliases 
+#  4.   General and often used functions
+#  5.   Set Base JDK
+#  6.   Including powerline shell
+#  7.   Including path_helper
+#  8.   Including oh-my-zsh
 #
 #  ---------------------------------------------------------------------------
 
 #   -------------------------------
-#   1.  EXPORTS
+#   1.  CORE
+#   -------------------------------
+source ~/.env/core.sh
+
+
+#   -------------------------------
+#   2.  EXPORTS
 #   -------------------------------
 source ~/.env/export.sh
 
 
 #   -------------------------------
-#   2.  ALIASES
+#   3.  ALIASES
 #   -------------------------------
 source ~/.env/alias.sh
 
 
 #   -------------------------------
-#   3.  GENERAL FUNCTIONS
+#   4.  GENERAL FUNCTIONS
 #   -------------------------------
 source ~/.env/functions.sh
 
 
 #   -------------------------------
-#   4.  BASE JDK
+#   5.  BASE JDK
 #   -------------------------------
 setjdk 1.8
 
 
 #   -------------------------------
-#   5.  INCLUDING POWERLINE SHELL
+#   6.  INCLUDING POWERLINE SHELL
 #   -------------------------------
 source ~/.env/powerline-shell.sh
 
 
 #   -------------------------------
-#   6.  INCLUDING PATH_HELPER
+#   7.  INCLUDING PATH_HELPER
 #   -------------------------------
 source ~/.env/path_helper.sh
 
 
 #   -------------------------------
-#   7.  INCLUDING OH-MY-ZSH
+#   8.  INCLUDING OH-MY-ZSH
 #   -------------------------------
 source ~/.env/oh-my-zsh.sh
 
