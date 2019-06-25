@@ -47,7 +47,7 @@ cd
 ###
 # bash
 bashrc="${HOME}/.bashrc"
-senf_bashrc="\${senf_path}/bashrc"
+senf_bashrc="${senf_path}/bashrc"
 
 if test -f "${bashrc}"; then
 	if grep -q "${senf_bashrc}" "${bashrc}"; then
@@ -65,7 +65,7 @@ fi
 ###
 # zsh
 zshrc=${HOME}/.zshrc
-senf_zshrrc="\${senf_path}/zshrc"
+senf_zshrrc="${senf_path}/zshrc"
 
 if test -f "${zshrc}"; then
 	if grep -q "${senf_zshrrc}" "${zshrc}"; then
