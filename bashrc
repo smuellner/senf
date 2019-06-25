@@ -22,7 +22,8 @@ plugins=(
 #   -------------------------------
 #   2.  INITIALIZE SENF ENV.
 #   -------------------------------
-source ~/.env/core/initialize.sh
+senf_path=$(cd `dirname $0` && pwd)
+source ${senf_path}/initialize.sh
 
 
 #   -------------------------------

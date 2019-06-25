@@ -1,3 +1,6 @@
+export SENF_PATH=$(cd `dirname $0` ; cd .. && pwd)
+export SENF_CORE_PATH=${senf_path}/core
+export SENF_PLUGINS_PATH=${senf_path}/plugins
 
 #   Log output functions
 #   ------------------------------------------------------------
@@ -66,7 +69,7 @@ function senfErrorSummary() {
 		printInfo "❌ ${senfInstallError}"
 	done
 	if [ ${#SENF_INSTALL_ERRORS[@]} -gt 0 ]; then
-		printInfo "👟 Run ~/.env/install.sh"
+		printInfo "👟 Run ${SENF_PATH}/install.sh"
 		echo ""
 	fi
 }
@@ -87,7 +90,7 @@ function setLdLibraryPath() {
 
 function loadPlugins() {
 	for plugin in ${plugins[@]}; do
-		pluginPath="$HOME/.env/plugins/${plugin}.sh"
+		pluginPath="$SENF_PLUGINS_PATH/${plugin}.sh"
 		if [[ -f ${pluginPath} ]]; then
 			source ${pluginPath}
 		else

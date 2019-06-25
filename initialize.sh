@@ -12,28 +12,30 @@
 # 
 #  ---------------------------------------------------------------------------
 
+senf_path=$(cd `dirname $0` && pwd)
+
 #   -------------------------------
 #   1.  CORE
 #   -------------------------------
-source ~/.env/core/core.sh
+source ${senf_path}/core/core.sh
 
 
 #   -------------------------------
 #   2.  EXPORTS
 #   -------------------------------
-source ~/.env/core/exports.sh
+source ${senf_path}/core/exports.sh
 
 
 #   -------------------------------
 #   3.  ALIASES
 #   -------------------------------
-source ~/.env/core/alias.sh
+source ${senf_path}/core/alias.sh
 
 
 #   -------------------------------
 #   4.  GENERAL FUNCTIONS
 #   -------------------------------
-source ~/.env/core/functions.sh
+source ${senf_path}/core/functions.sh
 
 
 #   -------------------------------

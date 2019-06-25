@@ -1,5 +1,7 @@
 #!/bin/sh
 
+senf_path=$(cd `dirname $0` && pwd)
+
 ###
 # python, pip
 python --version
@@ -41,34 +43,34 @@ cd
 ###
 # bash
 bashrc="${HOME}/.bashrc"
-env_bashrc="\${HOME}/.env/bashrc"
+senf_bashrc="\${senf_path}/bashrc"
 
 if test -f "${bashrc}"; then
-	if grep -q "${env_bashrc}" "${bashrc}"; then
-		echo "✅ ${env_bashrc} already sourced"
+	if grep -q "${senf_bashrc}" "${bashrc}"; then
+		echo "✅ ${senf_bashrc} already sourced"
 	else
-		echo "⚙️  Sourcing ${env_bashrc}"
+		echo "⚙️  Sourcing ${senf_bashrc}"
 		echo "" >>${bashrc}
-		echo "# Including env_bashrc" >>${bashrc}
-		echo "test -e \"${env_bashrc}\" && source \"${env_bashrc}\"" >>${bashrc}
+		echo "# Including senf_bashrc" >>${bashrc}
+		echo "test -e \"${senf_bashrc}\" && source \"${senf_bashrc}\"" >>${bashrc}
 	fi
 else
-	echo "❌ ${env_bashrc} does not exist"
+	echo "❌ ${senf_bashrc} does not exist"
 fi
 
 ###
 # zsh
 zshrc=${HOME}/.zshrc
-env_zshrrc="\${HOME}/.env/zshrc"
+senf_zshrrc="\${senf_path}/zshrc"
 
 if test -f "${zshrc}"; then
-	if grep -q "${env_zshrrc}" "${zshrc}"; then
-		echo "✅ ${env_zshrrc} already sourced"
+	if grep -q "${senf_zshrrc}" "${zshrc}"; then
+		echo "✅ ${senf_zshrrc} already sourced"
 	else
-		echo "⚙️  Sourcing ${env_zshrrc}"
+		echo "⚙️  Sourcing ${senf_zshrrc}"
 		echo "" >>${zshrc}
 		echo "# Including env zshrc" >>${zshrc}
-		echo "test -e \"${env_zshrrc}\" && source \"${env_zshrrc}\"" >>${zshrc}
+		echo "test -e \"${senf_zshrrc}\" && source \"${senf_zshrrc}\"" >>${zshrc}
 	fi
 else
 	echo "❌ ${zshrc} does not exist"
