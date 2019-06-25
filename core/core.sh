@@ -1,4 +1,16 @@
-#   Core functions
+
+#   Log output functions
+#   ------------------------------------------------------------
+function printHead() {
+	echo " === $1 ==="
+}
+
+function printInfo() {
+	echo " $1"
+}
+
+
+#   Senf functions
 #   ------------------------------------------------------------
 export SENF_ADDONS=()
 export SENF_ERRORS=()
@@ -23,32 +35,44 @@ function senfInstallError() {
 }
 
 function senf() {
+	if [ ${#SENF_ADDONS[@]} -gt 0 ]; then
+		printHead "ADDONS"
+	fi
 	for senfAddon in ${SENF_ADDONS[@]}; do
-		echo "✅ ${senfAddon}"
+		printInfo "✅ ${senfAddon}"
 	done
+	if [ ${#SENF_ADDONS[@]} -gt 0 ]; then
+		echo ""
+	fi
 
 	senfErrorSummary
 }
 
 function senfErrorSummary() {
 	if [ ${#SENF_ERRORS[@]} -gt 0 ]; then
-		echo "==> ERRORS" 
+		printHead "ERRORS"
 	fi
 	for senfError in ${SENF_ERRORS[@]}; do
-		echo "❌ ${senfError}"
+		printInfo "❌ ${senfError}"
 	done
+	if [ ${#SENF_ERRORS[@]} -gt 0 ]; then
+		echo ""
+	fi
 
 	if [ ${#SENF_INSTALL_ERRORS[@]} -gt 0 ]; then
-		echo "==> INSTALL ERRORS" 
+		printHead "INSTALL ERRORS"
 	fi
 	for senfInstallError in ${SENF_INSTALL_ERRORS[@]}; do
-		echo "❌ ${senfInstallError}"
+		printInfo "❌ ${senfInstallError}"
 	done
 	if [ ${#SENF_INSTALL_ERRORS[@]} -gt 0 ]; then
-		echo "👟 Run ~/.env/install.sh"
+		printInfo "👟 Run ~/.env/install.sh"
+		echo ""
 	fi
 }
 
+#   Path functions
+#   ------------------------------------------------------------
 function setPath() {
 	if [[ -d $1 ]]; then
 		export PATH=$PATH:$1
@@ -61,6 +85,16 @@ function setLdLibraryPath() {
 	fi
 }
 
+function loadPlugins() {
+	for plugin in ${plugins[@]}; do
+		pluginPath="$HOME/.env/plugins/${plugin}.sh"
+		if [[ -f ${pluginPath} ]]; then
+			source ${pluginPath}
+		else
+			senfError "Plugin '${plugin}' missing at '${pluginPath}'!"
+		fi
+	done
+}
 
 export EDITOR_CLI='/usr/bin/nano'
 export EDITOR_UI='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
