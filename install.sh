@@ -4,11 +4,15 @@ senf_path=$(cd `dirname $0` && pwd)
 
 ###
 # python, pip
-python --version
-python -m ensurepip --default-pip --upgrade --user
-python -m pip install --upgrade pip setuptools wheel --user
+python_cmd=$(which python)
+${python_cmd} --version
+${python_cmd} -m ensurepip --default-pip --upgrade --user
+${python_cmd} -m pip install --upgrade pip setuptools wheel --user
 
-pip install --upgrade pip --user
+python_bin_path="${HOME}/Library/Python/*/bin"
+pip_cmd="${python_bin_path}/pip"
+${pip_cmd} --version
+${pip_cmd} install --upgrade pip --user
 
 ###
 # powerline-shell
@@ -16,7 +20,7 @@ pip install --upgrade pip --user
 powerline_shell="/usr/local/bin/powerline-shell"
 
 if [ ! -f ${powerline_shell} ]; then
-	powerline_shell=$(find ~/Library/Python/*/bin -name powerline-shell -print | head -n 1)
+	powerline_shell=$(find ${python_bin_path} -name powerline-shell -print | head -n 1)
 fi
 
 if test -f ${powerline_shell}; then
@@ -24,7 +28,7 @@ if test -f ${powerline_shell}; then
 else
 	echo "⚙️  Installing powerline-shell"
 	echo ${powerline_shell}
-	pip install powerline-shell --user
+	${pip_cmd}  install powerline-shell --user
 fi
 
 ###
