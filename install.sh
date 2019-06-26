@@ -17,16 +17,16 @@ ${pip_cmd} install --upgrade pip --user
 
 powerline_shell="/usr/local/bin/powerline-shell"
 
-if [ ! -e ${powerline_shell} ]; then
+if ! test -e "${powerline_shell}"; then
 	powerline_shell=$(find ${python_bin_path} -name powerline-shell -print | head -n 1)
 fi
 
-if test -e ${powerline_shell}; then
+if test -e "${powerline_shell}"; then
 	echo "✅ ${powerline_shell} already installed"
 else
 	echo "⚙️  Installing powerline-shell"
 	echo ${powerline_shell}
-	${pip_cmd}  install powerline-shell --user
+	${pip_cmd} install powerline-shell --user
 fi
 
 ###
