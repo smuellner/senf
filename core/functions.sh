@@ -36,9 +36,34 @@ function setjdk() {
     export PATH=$JAVA_HOME/bin:$PATH
   else
     /usr/libexec/java_home -V
-    echo $JAVA_HOME
+    printInfo $JAVA_HOME
   fi
 }
+
+function checkjdk() {
+  local _javaVersion=$1
+  if type -p java; then
+      printInfo "✅ Found java executable in PATH"
+      _java=java
+  elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
+      printInfo "✅ Found java executable in JAVA_HOME"     
+      _java="$JAVA_HOME/bin/java"
+  else
+      printError "❌ No java found!"
+  fi
+
+  if [[ "$_java" ]]; then
+      version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+      if [[ "$version" > "$_javaVersion" ]]; then
+        printError "❌ Java version is higher than ${_javaVersion}"
+      elif [[ "$version" < "$_javaVersion" ]]; then  
+        printError "❌ Java version is lower than ${_javaVersion}"
+      else
+        printInfo "✅ Java Version ${version}"
+      fi
+  fi
+}
+
 
 #   remove arg from path
 #   ------------------------------------------------------------
