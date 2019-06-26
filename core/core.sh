@@ -1,10 +1,13 @@
-export SENF_PATH=$(cd `dirname $0` ; cd .. && pwd)
-export SENF_CORE_PATH=${senf_path}/core
-export SENF_PLUGINS_PATH=${senf_path}/plugins
+export SENF_PATH="${HOME}/.senf"
+export SENF_CORE_PATH=${SENF_PATH}/core
+export SENF_PLUGINS_PATH=${SENF_PATH}/plugins
 
 #   Log output functions
 #   ------------------------------------------------------------
-function printWithStyle ()
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
+
+function printWithStyle()
 {
     if [ "$2" == "info" ] ; then
         COLOR="96m";
@@ -32,7 +35,7 @@ function printWithStyle ()
 
 function printHead()
 {
-    printWithStyle "${bold}== $1 ==${normal}\n" "head";
+    printWithStyle "${BOLD}== $1 ==${NORMAL}\n" "head";
 }
 
 function printQuestion()
@@ -143,7 +146,7 @@ function setLdLibraryPath() {
 
 function loadPlugins() {
 	for plugin in ${plugins[@]}; do
-		pluginPath="$SENF_PLUGINS_PATH/${plugin}.sh"
+		pluginPath="${SENF_PLUGINS_PATH}/${plugin}.sh"
 		if [[ -f ${pluginPath} ]]; then
 			source ${pluginPath}
 		else

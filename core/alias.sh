@@ -15,7 +15,6 @@ alias gbranch="git checkout -b"
 alias gclone="git clone"
 alias g="${GIT_UI} ."
 alias gupdate_submodules='git pull --recurse-submodules && git submodule update'
-
 # Compress pngs
 alias compress_png="pngquant"
 alias png="pngquant"

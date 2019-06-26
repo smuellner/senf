@@ -22,11 +22,16 @@ plugins=(
 #   -------------------------------
 #   2.  INITIALIZE SENF ENV.
 #   -------------------------------
-senf_path=$(cd `dirname $0` && pwd)
-source ${senf_path}/initialize.sh
-
+source ${HOME}/.senf/initialize.sh
 
 #   -------------------------------
 #   3.  BASE JDK
 #   -------------------------------
-setjdk 1.8
+# setjdk 1.8
+
+
+#   -------------------------------
+#   4.  Source user profile
+#   -------------------------------
+test -e ${HOME}/.senf_profile && source ${HOME}/.senf_profile
+

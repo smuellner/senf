@@ -11,31 +11,30 @@
 #  6.   Show error summary
 # 
 #  ---------------------------------------------------------------------------
-
-senf_path=$(cd `dirname $0` && pwd)
+SENF_PATH="${HOME}/.senf"
 
 #   -------------------------------
 #   1.  CORE
 #   -------------------------------
-source ${senf_path}/core/core.sh
+source ${SENF_PATH}/core/core.sh
 
 
 #   -------------------------------
 #   2.  EXPORTS
 #   -------------------------------
-source ${senf_path}/core/exports.sh
+source ${SENF_PATH}/core/exports.sh
 
 
 #   -------------------------------
 #   3.  ALIASES
 #   -------------------------------
-source ${senf_path}/core/alias.sh
+source ${SENF_PATH}/core/alias.sh
 
 
 #   -------------------------------
 #   4.  GENERAL FUNCTIONS
 #   -------------------------------
-source ${senf_path}/core/functions.sh
+source ${SENF_PATH}/core/functions.sh
 
 
 #   -------------------------------

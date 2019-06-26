@@ -1,7 +1,5 @@
 #!/bin/sh
 
-senf_path=$(cd `dirname $0` && pwd)
-
 ###
 # python, pip
 python_cmd=$(which python)
@@ -19,11 +17,11 @@ ${pip_cmd} install --upgrade pip --user
 
 powerline_shell="/usr/local/bin/powerline-shell"
 
-if [ ! -f ${powerline_shell} ]; then
+if [ ! -e ${powerline_shell} ]; then
 	powerline_shell=$(find ${python_bin_path} -name powerline-shell -print | head -n 1)
 fi
 
-if test -f ${powerline_shell}; then
+if test -e ${powerline_shell}; then
 	echo "✅ ${powerline_shell} already installed"
 else
 	echo "⚙️  Installing powerline-shell"
@@ -47,9 +45,11 @@ cd
 ###
 # bash
 bashrc="${HOME}/.bashrc"
-senf_bashrc="${senf_path}/bashrc"
+senf_bashrc="\${HOME}/.senf/bashrc"
 
-if test -f "${bashrc}"; then
+! test -e "${bashrc}" && touch "${bashrc}"
+
+if test -e "${bashrc}"; then
 	if grep -q "${senf_bashrc}" "${bashrc}"; then
 		echo "✅ ${senf_bashrc} already sourced"
 	else
@@ -65,9 +65,11 @@ fi
 ###
 # zsh
 zshrc=${HOME}/.zshrc
-senf_zshrrc="${senf_path}/zshrc"
+senf_zshrrc="\${HOME}/.senf/zshrc"
 
-if test -f "${zshrc}"; then
+! test -e "${zshrc}" && touch "${zshrc}"
+
+if test -e "${zshrc}"; then
 	if grep -q "${senf_zshrrc}" "${zshrc}"; then
 		echo "✅ ${senf_zshrrc} already sourced"
 	else
