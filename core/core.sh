@@ -9,27 +9,27 @@ NORMAL=$(tput sgr0)
 
 function printWithStyle()
 {
-    if [ "$2" == "info" ] ; then
+    if [[ "$2" == "info" ]]; then
         COLOR="96m";
-        elif [ "$2" == "question" ] ; then
+    elif [[ "$2" == "question" ]]; then
         COLOR="86m";
-        elif [ "$2" == "success" ] ; then
+    elif [[ "$2" == "success" ]]; then
         COLOR="92m";
-        elif [ "$2" == "warning" ] ; then
+    elif [[ "$2" == "warning" ]]; then
         COLOR="93m";
-        elif [ "$2" == "danger" ] ; then
+    elif [[ "$2" == "danger" ]]; then
         COLOR="91m";
-        elif [ "$2" == "head" ] ; then
+    elif [[ "$2" == "head" ]]; then
         COLOR="94m";
-        elif [ "$2" == "cmd" ] ; then
+    elif [[ "$2" == "cmd" ]]; then
         COLOR="33m";
     else #default color
         COLOR="0m";
     fi
-    
+
     STARTCOLOR="\e[$COLOR";
     ENDCOLOR="\e[0m";
-    
+
     printf "$STARTCOLOR%b$ENDCOLOR" "$1" 1>&2;
 }
 
