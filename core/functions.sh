@@ -52,7 +52,7 @@ function checkjdk() {
       printError "❌ No java found!"
   fi
 
-  if [[ "$_java" ]]; then
+  if [[ ! -z "$_javaVersion" && "$_java" ]]; then
       version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
       if [[ "$version" > "$_javaVersion" ]]; then
         printError "❌ Java version is higher than ${_javaVersion}"
