@@ -77,7 +77,7 @@ function addSenf() {
 
 function addSenfEnv() {
 	if [[ -n $1 ]]; then
-		SENF_ENV+=("$1")
+		SENF_ENV+=("$1|\t$2")
 	fi
 }
 
@@ -98,7 +98,7 @@ function senf() {
 		printHead "ADDONS"
 	fi
 	for senfAddon in ${SENF_ADDONS[@]}; do
-		printInfo "✅ ${senfAddon}"
+		printf "%2s  %-s\n" "✔️" "${senfAddon}"
 	done
 	if [ ${#SENF_ADDONS[@]} -gt 0 ]; then
 		echo ""
@@ -107,7 +107,7 @@ function senf() {
 		printHead "ENV"
 	fi
 	for senfEnv in ${SENF_ENV[@]}; do
-		printInfo "✅ ${senfEnv}"
+		echo "${senfEnv}"|awk -F'|' '{printf "%2s  %-10s\t%-s\n", "✔️", $1, $2}'
 	done
 	if [ ${#SENF_ENV[@]} -gt 0 ]; then
 		echo ""
@@ -121,7 +121,7 @@ function senfErrorSummary() {
 		printHead "ERRORS"
 	fi
 	for senfError in ${SENF_ERRORS[@]}; do
-		printInfo "❌ ${senfError}"
+		printError "❌ ${senfError}"
 	done
 	if [ ${#SENF_ERRORS[@]} -gt 0 ]; then
 		echo ""
@@ -131,7 +131,7 @@ function senfErrorSummary() {
 		printHead "INSTALL ERRORS"
 	fi
 	for senfInstallError in ${SENF_INSTALL_ERRORS[@]}; do
-		printInfo "❌ ${senfInstallError}"
+		printError "❌ ${senfInstallError}"
 	done
 	if [ ${#SENF_INSTALL_ERRORS[@]} -gt 0 ]; then
 		printInfo "👟 Run ${SENF_PATH}/install.sh"
@@ -196,24 +196,33 @@ function getDefaultBinary() {
 	done
 }
 
-_atom='/usr/local/bin/atom'
+
+_atom_installed='/usr/local/bin/atom'
+_atom='/Applications/Atom.app/Contents/MacOS/atom'
+_see='/usr/local/bin/see'
+_code_installed='/usr/local/bin/code'
 _code='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
 _see='/usr/local/bin/see'
 _mate_installed='/usr/local/bin/mate'
 _mate='/Applications/TextMate.app/Contents/Resources/mate'
-
+_brackets_installed='/usr/local/bin/brackets'
+_brackets='/Applications/Brackets.app/Contents/Resources/brackets.sh'
 function setDefaultEditorUI() {
     local possibleEditorUIs=(
+		"${_code_installed}"
 		"${_code}"
+		"${_atom_installed}"
 		"${_atom}"
 		"${_see}"
-		"${_mate}"
 		"${_mate_installed}"
+		"${_mate}"
+		"${_brackets_installed}"
+		"${_brackets}"
 	)
 	getDefaultBinary "${possibleEditorUIs[@]}"
 	if [[ ! -z ${defaultBinaryPath} ]]; then
 		export EDITOR_UI="${defaultBinaryPath}"
-		addSenfEnv "EDITOR_UI:\t${defaultBinaryPath}"
+		addSenfEnv "EDITOR_UI" "${defaultBinaryPath}"
 	fi
 }
 
@@ -229,7 +238,7 @@ function setDefaultGitUI() {
 	getDefaultBinary "${possibleGitUIs[@]}"
 	if [[ ! -z ${defaultBinaryPath} ]]; then
 		export GIT_UI="${defaultBinaryPath}"
-		addSenfEnv "GIT_UI:\t${defaultBinaryPath}"
+		addSenfEnv "GIT_UI" "${defaultBinaryPath}"
 	fi
 }
 
