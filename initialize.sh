@@ -7,8 +7,9 @@
 #  2.   Exports
 #  3.   Aliases 
 #  4.   General and often used functions
-#  5.   Load plugins
-#  6.   Show error summary
+#  5.   Loaud user profile
+#  6.   Load plugins
+#  7.   Show error summary
 # 
 #  ---------------------------------------------------------------------------
 SENF_PATH="${HOME}/.senf"
@@ -38,11 +39,17 @@ source ${SENF_PATH}/core/functions.sh
 
 
 #   -------------------------------
+#   5.  Source user profile
+#   -------------------------------
+test -e ${HOME}/.senf_profile && source ${HOME}/.senf_profile
+
+#   -------------------------------
 #   6.  LOAD PLUGINS
 #   -------------------------------
 loadPlugins
+loadUserPlugins
 
 #   -------------------------------
-#   5.  ERROR SUMMARY
+#   7.  ERROR SUMMARY
 #   -------------------------------
 senfErrorSummary

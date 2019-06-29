@@ -1,72 +1,65 @@
 export SENF_PATH="${HOME}/.senf"
 export SENF_CORE_PATH=${SENF_PATH}/core
 export SENF_PLUGINS_PATH=${SENF_PATH}/plugins
+export SENF_USER_PLUGINS_PATH=${HOME}/.senf_plugins
 
 #   Log output functions
 #   ------------------------------------------------------------
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
-function printWithStyle()
-{
-    if [[ "$2" == "info" ]]; then
-        COLOR="96m";
-    elif [[ "$2" == "question" ]]; then
-        COLOR="86m";
-    elif [[ "$2" == "success" ]]; then
-        COLOR="92m";
-    elif [[ "$2" == "warning" ]]; then
-        COLOR="93m";
-    elif [[ "$2" == "danger" ]]; then
-        COLOR="91m";
-    elif [[ "$2" == "head" ]]; then
-        COLOR="94m";
-    elif [[ "$2" == "cmd" ]]; then
-        COLOR="33m";
-    else #default color
-        COLOR="0m";
-    fi
+function printWithStyle() {
+	if [[ "$2" == "info" ]]; then
+		COLOR="96m"
+	elif [[ "$2" == "question" ]]; then
+		COLOR="86m"
+	elif [[ "$2" == "success" ]]; then
+		COLOR="92m"
+	elif [[ "$2" == "warning" ]]; then
+		COLOR="93m"
+	elif [[ "$2" == "danger" ]]; then
+		COLOR="91m"
+	elif [[ "$2" == "head" ]]; then
+		COLOR="94m"
+	elif [[ "$2" == "cmd" ]]; then
+		COLOR="33m"
+	else #default color
+		COLOR="0m"
+	fi
 
-    STARTCOLOR="\e[$COLOR";
-    ENDCOLOR="\e[0m";
+	STARTCOLOR="\e[$COLOR"
+	ENDCOLOR="\e[0m"
 
-    printf "$STARTCOLOR%b$ENDCOLOR" "$1" 1>&2;
+	printf "$STARTCOLOR%b$ENDCOLOR" "$1" 1>&2
 }
 
-function printHead()
-{
-    printWithStyle "${BOLD}== $1 ==${NORMAL}\n" "head";
+function printHead() {
+	printWithStyle "${BOLD}== $1 ==${NORMAL}\n" "head"
 }
 
-function printQuestion()
-{
-    printWithStyle "==> $1\n" "question";
+function printQuestion() {
+	printWithStyle "==> $1\n" "question"
 }
 
-function printInfo()
-{
-    printWithStyle "==> $1\n" "info";
+function printInfo() {
+	printWithStyle "==> $1\n" "info"
 }
 
-function printWarning()
-{
-    printWithStyle "==> $1\n" "warning";
+function printWarning() {
+	printWithStyle "==> $1\n" "warning"
 }
 
-function printCmd()
-{
-    printWithStyle "> $1\n" "cmd";
+function printCmd() {
+	printWithStyle "> $1\n" "cmd"
 }
 
-function printError()
-{
-    printWithStyle "==> $1\n" "danger";
+function printError() {
+	printWithStyle "==> $1\n" "danger"
 }
 
-function errorExit()
-{
-    printError $1;
-    exit 1
+function errorExit() {
+	printError $1
+	exit 1
 }
 
 #   Senf functions
@@ -144,6 +137,9 @@ function setLdLibraryPath() {
 	fi
 }
 
+#   Plugins
+#   ------------------------------------------------------------
+
 function loadPlugins() {
 	for plugin in ${plugins[@]}; do
 		pluginPath="${SENF_PLUGINS_PATH}/${plugin}.sh"
@@ -154,6 +150,31 @@ function loadPlugins() {
 		fi
 	done
 }
+
+function loadUserPlugins() {
+	for plugin in ${senf_plugins[@]}; do
+		pluginPath="${SENF_USER_PLUGINS_PATH}/${plugin}.sh"
+		if [[ -f ${pluginPath} ]]; then
+			source ${pluginPath}
+		else
+			senfError "Plugin '${plugin}' missing at '${pluginPath}'!"
+		fi
+	done
+}
+
+#   Update
+#   ------------------------------------------------------------
+function senfUpdate() {
+	cd ${SENF_PATH}
+	git pull 
+	cd -
+}
+
+#   Find Defaults
+#   ------------------------------------------------------------
+
+#   Defaults
+#   ------------------------------------------------------------
 
 export EDITOR_CLI='/usr/bin/nano'
 export EDITOR_UI='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'

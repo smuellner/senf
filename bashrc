@@ -24,14 +24,8 @@ plugins=(
 #   -------------------------------
 source ${HOME}/.senf/initialize.sh
 
+
 #   -------------------------------
 #   3.  BASE JDK
 #   -------------------------------
 # setjdk 1.8
-
-
-#   -------------------------------
-#   4.  Source user profile
-#   -------------------------------
-test -e ${HOME}/.senf_profile && source ${HOME}/.senf_profile
-
