@@ -65,12 +65,19 @@ function errorExit() {
 #   Senf functions
 #   ------------------------------------------------------------
 export SENF_ADDONS=()
+export SENF_ENV=()
 export SENF_ERRORS=()
 export SENF_INSTALL_ERRORS=()
 
 function addSenf() {
 	if [[ -n $1 ]]; then
 		SENF_ADDONS+=("$1")
+	fi
+}
+
+function addSenfEnv() {
+	if [[ -n $1 ]]; then
+		SENF_ENV+=("$1")
 	fi
 }
 
@@ -94,6 +101,15 @@ function senf() {
 		printInfo "✅ ${senfAddon}"
 	done
 	if [ ${#SENF_ADDONS[@]} -gt 0 ]; then
+		echo ""
+	fi
+	if [ ${#SENF_ENV[@]} -gt 0 ]; then
+		printHead "ENV"
+	fi
+	for senfEnv in ${SENF_ENV[@]}; do
+		printInfo "✅ ${senfEnv}"
+	done
+	if [ ${#SENF_ENV[@]} -gt 0 ]; then
 		echo ""
 	fi
 
@@ -170,13 +186,54 @@ function senfUpdate() {
 	cd -
 }
 
-#   Find Defaults
+#   Default application functions
 #   ------------------------------------------------------------
+function getDefaultBinary() {
+	for defaultBinaryPath in $@; do
+		if [[ -x ${defaultBinaryPath} ]]; then
+			return 0
+		fi
+	done
+}
 
-#   Defaults
+_atom='/usr/local/bin/atom'
+_code='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
+_see='/usr/local/bin/see'
+_mate='/Applications/TextMate.app/Contents/Resources/mate'
+_mate_installed='/usr/local/bin/mate'
+
+function setDefaultEditorUI() {
+    local possibleEditorUIs=(
+		"${_code}"
+		"${_atom}"
+		"${_see}"
+		"${_mate}"
+		"${_mate_installed}"
+	)
+	getDefaultBinary "${possibleEditorUIs[@]}"
+	if [[ ! -z ${defaultBinaryPath} ]]; then
+		export EDITOR_UI="${defaultBinaryPath}"
+		addSenfEnv "EDITOR_UI:\t${defaultBinaryPath}"
+	fi
+}
+
+_gittower='/Applications/Tower.app/Contents/Resources/gittower'
+_stree='/Applications/SourceTree.app/Contents/Resources/stree'
+function setDefaultGitUI() {
+    local possibleGitUIs=(
+		"${_gittower}"
+		"${_stree}"
+	)
+	getDefaultBinary "${possibleGitUIs[@]}"
+	if [[ ! -z ${defaultBinaryPath} ]]; then
+		export GIT_UI="${defaultBinaryPath}"
+		addSenfEnv "GIT_UI:\t${defaultBinaryPath}"
+	fi
+}
+
+#   set Defaults
 #   ------------------------------------------------------------
-
+setDefaultEditorUI
+setDefaultGitUI
 export EDITOR_CLI='/usr/bin/nano'
-export EDITOR_UI='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
 export GIT_CLI='/usr/bin/git'
-export GIT_UI='/Applications/SourceTree.app/Contents/Resources/stree'
