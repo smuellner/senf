@@ -25,7 +25,7 @@ function autoDetectZscaler() {
 	if [[ -d "${ZSCALER_PATH}" ]]; then
 		if [[ -x "${ZSCALER_RUNTIME}" ]]; then
 			addSenfEnv "Zscaler" "${ZSCALER_PATH}"
-			status=$(curl --head --silent --fail --output /dev/null "$ZSCALER_URL" | head -n 1)
+			status=$(curl --head --silent --fail "$ZSCALER_URL" | head -n 1)
 			if echo "$status" | grep -q 200; then
 				setZScalerProxy
 			fi
