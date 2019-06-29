@@ -199,8 +199,8 @@ function getDefaultBinary() {
 _atom='/usr/local/bin/atom'
 _code='/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code'
 _see='/usr/local/bin/see'
-_mate='/Applications/TextMate.app/Contents/Resources/mate'
 _mate_installed='/usr/local/bin/mate'
+_mate='/Applications/TextMate.app/Contents/Resources/mate'
 
 function setDefaultEditorUI() {
     local possibleEditorUIs=(
@@ -217,11 +217,13 @@ function setDefaultEditorUI() {
 	fi
 }
 
-_gittower='/Applications/Tower.app/Contents/Resources/gittower'
+_gittower_installed='/usr/local/bin/gittower'
+_gittower='/Applications/Tower.app/Contents/MacOS/gittower'
 _stree='/Applications/SourceTree.app/Contents/Resources/stree'
 function setDefaultGitUI() {
     local possibleGitUIs=(
 		"${_gittower}"
+		"${_gittower_installed}"
 		"${_stree}"
 	)
 	getDefaultBinary "${possibleGitUIs[@]}"
