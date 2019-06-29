@@ -11,16 +11,17 @@ function o() {
 #   git pull and open in git and text editor
 #   ------------------------------------------------------------
 function e() {
-  if [[ -z $1 ]]; then
-    _z $1
-    git pull
-    $GIT_UI $1
-    $EDITOR $1
-  else
+  local gitRepositoryPath=$1
+  if [[ -z $1"${gitRepositoryPath+x}" ]]; then
     _z .
     git pull
     $GIT_UI .
     $EDITOR .
+  else
+    _z $gitRepositoryPath
+    git pull
+    $GIT_UI $gitRepositoryPath
+    $EDITOR $gitRepositoryPath
   fi
 }
 
@@ -43,27 +44,26 @@ function setjdk() {
 function checkjdk() {
   local _javaVersion=$1
   if type -p java; then
-      printInfo "✅ Found java executable in PATH"
-      _java=java
-  elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]];  then
-      printInfo "✅ Found java executable in JAVA_HOME"     
-      _java="$JAVA_HOME/bin/java"
+    printInfo "✅ Found java executable in PATH"
+    _java=java
+  elif [[ -n "$JAVA_HOME" ]] && [[ -x "$JAVA_HOME/bin/java" ]]; then
+    printInfo "✅ Found java executable in JAVA_HOME"
+    _java="$JAVA_HOME/bin/java"
   else
-      printError "❌ No java found!"
+    printError "❌ No java found!"
   fi
 
   if [[ ! -z "$_javaVersion" && "$_java" ]]; then
-      version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
-      if [[ "$version" > "$_javaVersion" ]]; then
-        printError "❌ Java version is higher than ${_javaVersion}"
-      elif [[ "$version" < "$_javaVersion" ]]; then  
-        printError "❌ Java version is lower than ${_javaVersion}"
-      else
-        printInfo "✅ Java Version ${version}"
-      fi
+    version=$("$_java" -version 2>&1 | awk -F '"' '/version/ {print $2}')
+    if [[ "$version" > "$_javaVersion" ]]; then
+      printError "❌ Java version is higher than ${_javaVersion}"
+    elif [[ "$version" < "$_javaVersion" ]]; then
+      printError "❌ Java version is lower than ${_javaVersion}"
+    else
+      printInfo "✅ Java Version ${version}"
+    fi
   fi
 }
-
 
 #   remove arg from path
 #   ------------------------------------------------------------
@@ -108,15 +108,15 @@ function mcd() {
 
 #   trash:        Moves a file to the MacOS trash
 #   --------------------------------------------------------------------
-function trash() { 
-  command mv "$@" ~/.Trash; 
+function trash() {
+  command mv "$@" ~/.Trash
 }
 
 #   ql:           Opens any file in MacOS Quicklook Preview
 #   --------------------------------------------------------------------
-function ql() { 
-  qlmanage -p "$*" >&/dev/null;
-} 
+function ql() {
+  qlmanage -p "$*" >&/dev/null
+}
 
 #   mans:   Search manpage given in agument '1' for term given in argument '2' (case insensitive)
 #           displays paginated result with colored search terms and two lines surrounding each hit.
