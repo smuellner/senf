@@ -12,17 +12,14 @@ function o() {
 #   ------------------------------------------------------------
 function e() {
   local gitRepositoryPath=$1
-  if [[ -z $1"${gitRepositoryPath+x}" ]]; then
+  if [[ -z "${gitRepositoryPath+x}" ]]; then
     _z .
-    git pull
-    $GIT_UI .
-    $EDITOR .
   else
     _z $gitRepositoryPath
-    git pull
-    $GIT_UI $gitRepositoryPath
-    $EDITOR $gitRepositoryPath
   fi
+  git pull
+  $GIT_UI .
+  $EDITOR .
 }
 
 #   set jdk you want to use
