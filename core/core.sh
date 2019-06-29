@@ -186,6 +186,14 @@ function senfUpdate() {
 	cd -
 }
 
+
+#   Http operations
+#   ------------------------------------------------------------
+function getHttpCode() {
+	local http_url="$1"
+	http_code=$(curl --write-out %{http_code} --silent --output /dev/null "$http_url")
+}
+
 #   Default application functions
 #   ------------------------------------------------------------
 function getDefaultBinary() {
@@ -195,7 +203,6 @@ function getDefaultBinary() {
 		fi
 	done
 }
-
 
 _atom_installed='/usr/local/bin/atom'
 _atom='/Applications/Atom.app/Contents/MacOS/atom'

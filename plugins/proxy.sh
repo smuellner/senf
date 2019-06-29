@@ -1,4 +1,4 @@
-export ZSCALER_URL="http://localhost:9000/localproxy.pac"
+export ZSCALER_URL="http://localhost:9000/localproxy.pac"x
 export ZSCALER_PATH="/Applications/Zscaler"
 export ZSCALER_RUNTIME="${ZSCALER_PATH}/Zscaler.app/MacOS/Zscaler"
 
@@ -25,11 +25,11 @@ function autoDetectZscaler() {
 	if [[ -d "${ZSCALER_PATH}" ]]; then
 		if [[ -x "${ZSCALER_RUNTIME}" ]]; then
 			addSenfEnv "Zscaler" "${ZSCALER_PATH}"
-			status=$(curl --head --silent --fail "$ZSCALER_URL" | head -n 1)
-			if echo "$status" | grep -q 200; then
-				setZScalerProxy
-			fi
 		fi
+	fi
+	getHttpCode "${ZSCALER_URL}"
+	if [[ "${http_code}" == "200" ]]; then
+		setZScalerProxy
 	fi
 }
 
