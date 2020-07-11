@@ -214,9 +214,10 @@ function senfReinstall() {
 	if [[ ! -z ${SENF_REPO} ]]; then 
 		printHead "Reinstall senf"
 		printInfo "${SENF_REPO}"
-		rm -rf ~/.senf
-		git clone ${SENF_REPO} ~/.senf
-		~/.senf/install.sh
+		cd ${HOME}
+		rm -rf ${HOME}/.senf
+		git clone ${SENF_REPO} ${HOME}/.senf
+		${HOME}/.senf/install.sh
 	fi
 }
 
