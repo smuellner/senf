@@ -200,12 +200,26 @@ function loadUserPlugins() {
 
 #   Update
 #   ------------------------------------------------------------
+
 function senfUpdate() {
 	cd ${SENF_PATH}
-	git pull 
+	git pull
+	./install.sh
 	cd -
 }
 
+function senfReinstall() {
+	rm -rf ~/.senf
+	cd
+  	git clone https://github.com/smuellner/senf .senf
+  	~/.senf/install.sh
+}
+
+#   Help
+#   ------------------------------------------------------------
+function senfHelp() {
+	less ${SENF_PATH}/HELP.md
+}
 
 #   Http operations
 #   ------------------------------------------------------------
