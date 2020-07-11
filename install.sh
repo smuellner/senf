@@ -1,7 +1,14 @@
 #!/bin/sh
 
+###
+# Environement
 SENF_PATH="${HOME}/.senf"
-mkdir -p "${HOME}/.senf/bin"
+SENF_BIN_PATH="${HOME}/.senf/bin"
+mkdir -p "${SENF_BIN_PATH}/"
+
+###
+# Update Installation
+git pull
 
 ###
 # python, pip
