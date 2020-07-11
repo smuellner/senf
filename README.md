@@ -4,28 +4,30 @@ This repo contains .zsh and .bash extensions that are easily includable in your 
 
 To clone the repo, do the following
 
-1. `cd`
-1. `git clone https://github.com/smuellner/senf .senf`
-1. `~/.senf/install.sh`
+```bash
+  cd
+  git clone https://github.com/smuellner/senf .senf
+  ~/.senf/install.sh
+```
 
 To install simply run this code in your terminal:
 
-`cd ; git clone https://github.com/smuellner/senf .senf ; ~/.senf/install.sh`
+```bash
+  cd ; git clone https://github.com/smuellner/senf .senf ; ~/.senf/install.sh
+```
 
----
 
 **Table of Contents**
 
 * [Help](HELP.md)
 * [License Agreement](LICENSE)
 
----
+
 
 ## Thanks go to others
 * [powerline-go from justjanne](https://github.com/justjanne/powerline-go) based on [powerline-shell from b-ryan](https://github.com/b-ryan/powerline-shell)
 * [powerline fonts from Kim Silkebækken] Powerline(https://github.com/powerline/fonts)
 
----
 
 ## License
 
