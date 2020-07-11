@@ -1,5 +1,8 @@
 #!/bin/sh
 
+SENF_PATH="${HOME}/.senf"
+mkdir -p "${HOME}/.senf/bin"
+
 ###
 # python, pip
 python_cmd=$(which python)
@@ -14,19 +17,28 @@ ${pip_cmd} install --upgrade pip --user
 
 ###
 # powerline-shell
+case $(uname | tr '[:upper:]' '[:lower:]') in
+  linux*)
+	powerline_cmd="powerline-go-linux-amd64"
+    ;;
+  darwin*)
+	powerline_cmd="powerline-go-darwin-amd64"
+    ;;
+  msys*)
+	powerline_cmd="powerline-go-windows-amd64"
+    ;;
+esac
 
-powerline_shell="/usr/local/bin/powerline-shell"
-
-if ! test -e "${powerline_shell}"; then
-	powerline_shell=$(find ${python_bin_path} -name powerline-shell -print | head -n 1)
-fi
-
-if test -e "${powerline_shell}"; then
-	echo "✅ ${powerline_shell} already installed"
-else
-	echo "⚙️  Installing powerline-shell"
-	echo ${powerline_shell}
-	${pip_cmd} install powerline-shell --user
+if test -e "${powerline_cmd}"; then
+	powerline_shell="${SENF_PATH}/bin/${powerline_cmd}"
+	if test -e "${powerline_shell}"; then
+		echo "✅ ${powerline_shell} already installed"
+	else
+		echo "⚙️  Installing powerline-shell"
+		echo ${powerline_shell}
+		curl "https://github.com/justjanne/powerline-go/releases/download/latest/${powerline_cmd}" > ${powerline_shell}
+		chmod 755 ${powerline_shell}
+	fi
 fi
 
 ###

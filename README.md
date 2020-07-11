@@ -11,3 +11,7 @@ To clone the repo, do the following
 To install simply run this code in your terminal:
 
 `cd ; git clone https://github.com/smuellner/senf .senf ; ~/.senf/install.sh`
+
+---
+* [Help](HELP.md)
+* [License Agreement](LICENSE)

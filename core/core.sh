@@ -3,6 +3,25 @@ export SENF_CORE_PATH=${SENF_PATH}/core
 export SENF_PLUGINS_PATH=${SENF_PATH}/plugins
 export SENF_USER_PLUGINS_PATH=${HOME}/.senf_plugins
 
+
+#   Detect OS
+#   ------------------------------------------------------------
+
+case $(uname | tr '[:upper:]' '[:lower:]') in
+  linux*)
+    export SENF_OS_NAME=linux
+    ;;
+  darwin*)
+    export SENF_OS_NAME=osx
+    ;;
+  msys*)
+    export SENF_OS_NAME=windows
+    ;;
+  *)
+    export SENF_OS_NAME=notset
+    ;;
+esac
+
 #   Log output functions
 #   ------------------------------------------------------------
 BOLD=$(tput bold)

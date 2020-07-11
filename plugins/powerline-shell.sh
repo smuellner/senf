@@ -1,21 +1,17 @@
 #!/bin/bash
-powerline_shell="/usr/local/bin/powerline-shell"
-
-if [ ! -f ${powerline_shell} ]; then
-	powerline_shell=$(find ~/Library/Python/*/bin -name powerline-shell -print | head -n 1)
-fi
+powerline_shell="${SENF_PATH}/bin/powerline-go-darwin-amd64"
 
 if test -f "${powerline_shell}"; then
-	if [ -n "$ZSH_VERSION" ]; then
+	if [ -n "${ZSH_VERSION}" ]; then
 
 		function powerline_precmd() {
-			PS1="$(${powerline_shell} --shell zsh $?)"
+			PS1="$(${powerline_shell} -error $? -shell zsh)"
 		}
 
 		function install_powerline_precmd() {
 			for s in "${precmd_functions[@]}"; do
 				if [ "$s" = "powerline_precmd" ]; then
-					return
+				return
 				fi
 			done
 			precmd_functions+=(powerline_precmd)
@@ -30,13 +26,13 @@ if test -f "${powerline_shell}"; then
 	elif [ -n "$BASH_VERSION" ]; then
 
 		function _update_ps1() {
-			PS1="$(${powerline_shell} $?)"
+			PS1="$(${powerline_shell} -error $?)"
 		}
 
-		if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+		if [ "$TERM" != "linux" ] && [ -f "${powerline_shell}" ]; then
 			PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 		fi
-		
+
 		addSenf "powerline-shell (bash)"
 
 	else

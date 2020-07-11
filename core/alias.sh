@@ -13,11 +13,11 @@ alias gpull="git pull"
 alias gpush="git push"
 alias gbranch="git checkout -b"
 alias gclone="git clone"
-alias g="${GIT_UI} ."
-alias gupdate_submodules='git pull --recurse-submodules && git submodule update'
+alias gui="${GIT_UI} ."
+alias gsub='git pull --recurse-submodules && git submodule update'
+
 # Compress pngs
-alias compress_png="pngquant"
-alias png="pngquant"
+alias compresspng="pngquant"
 
 # list
 
