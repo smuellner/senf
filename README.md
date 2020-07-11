@@ -26,7 +26,7 @@ To install simply run this code in your terminal:
 
 ## Thanks go to others
 * [powerline-go from justjanne](https://github.com/justjanne/powerline-go) based on [powerline-shell from b-ryan](https://github.com/b-ryan/powerline-shell)
-* [powerline fonts from Kim Silkebækken] Powerline(https://github.com/powerline/fonts)
+* [powerline fonts from Kim Silkebækken](https://github.com/powerline/fonts)
 
 
 ## License
