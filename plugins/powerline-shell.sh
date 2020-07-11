@@ -1,5 +1,16 @@
-#!/bin/bash
-powerline_shell="${SENF_PATH}/bin/powerline-go-darwin-amd64"
+case "${SENF_OS_NAME}" in
+  "${SENF_OS_LINUX}")
+	powerline_cmd="powerline-go-linux-amd64"
+    ;;
+  "${SENF_OS_MACOS}")
+	powerline_cmd="powerline-go-darwin-amd64"
+    ;;
+  "${SENF_OS_WINDOWS}")
+	powerline_cmd="powerline-go-windows-amd64"
+    ;;
+esac
+
+powerline_shell="${SENF_PATH}/bin/${powerline_cmd}"
 
 if test -f "${powerline_shell}"; then
 	if [ -n "${ZSH_VERSION}" ]; then
@@ -11,7 +22,7 @@ if test -f "${powerline_shell}"; then
 		function install_powerline_precmd() {
 			for s in "${precmd_functions[@]}"; do
 				if [ "$s" = "powerline_precmd" ]; then
-				return
+					return
 				fi
 			done
 			precmd_functions+=(powerline_precmd)

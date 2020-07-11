@@ -11,18 +11,6 @@ mkdir -p "${SENF_BIN_PATH}/"
 git pull
 
 ###
-# python, pip
-python_cmd=$(which python)
-${python_cmd} --version
-${python_cmd} -m ensurepip --default-pip --upgrade --user
-${python_cmd} -m pip install --upgrade pip setuptools wheel --user
-
-python_bin_path="${HOME}/Library/Python/*/bin"
-pip_cmd="${python_bin_path}/pip"
-${pip_cmd} --version
-${pip_cmd} install --upgrade pip --user
-
-###
 # powerline-shell
 case $(uname | tr '[:upper:]' '[:lower:]') in
   linux*)
@@ -36,14 +24,14 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
     ;;
 esac
 
-if test -e "${powerline_cmd}"; then
+if [[ ! -z "${powerline_cmd}" ]]; then
 	powerline_shell="${SENF_PATH}/bin/${powerline_cmd}"
 	if test -e "${powerline_shell}"; then
 		echo "✅ ${powerline_shell} already installed"
 	else
 		echo "⚙️  Installing powerline-shell"
 		echo ${powerline_shell}
-		curl "https://github.com/justjanne/powerline-go/releases/download/latest/${powerline_cmd}" > ${powerline_shell}
+		curl -L "https://github.com/justjanne/powerline-go/releases/latest/download/${powerline_cmd}" --output ${powerline_shell}
 		chmod 755 ${powerline_shell}
 	fi
 fi

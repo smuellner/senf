@@ -3,19 +3,20 @@ export SENF_CORE_PATH=${SENF_PATH}/core
 export SENF_PLUGINS_PATH=${SENF_PATH}/plugins
 export SENF_USER_PLUGINS_PATH=${HOME}/.senf_plugins
 
-
 #   Detect OS
 #   ------------------------------------------------------------
-
+export SENF_OS_LINUX="linux"
+export SENF_OS_MACOS="macos"
+export SENF_OS_WINDOWS="windows"
 case $(uname | tr '[:upper:]' '[:lower:]') in
   linux*)
-    export SENF_OS_NAME=linux
+    export SENF_OS_NAME=${SENF_OS_LINUX}
     ;;
   darwin*)
-    export SENF_OS_NAME=osx
+    export SENF_OS_NAME=${SENF_OS_MACOS}
     ;;
   msys*)
-    export SENF_OS_NAME=windows
+    export SENF_OS_NAME=${SENF_OS_WINDOWS}
     ;;
   *)
     export SENF_OS_NAME=notset
