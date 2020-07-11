@@ -211,6 +211,8 @@ function senfUpdate() {
 function senfReinstall() {
 	SENF_REPO=$(git remote --verbose | grep origin | grep fetch | cut -f2 | cut -d' ' -f1)
 	if [[ ! -z ${SENF_REPO} ]]; then 
+		printHead "Reinstall senf"
+		printInfo "${SENF_REPO}"
 		rm -rf ~/.senf
 		git clone ${SENF_REPO} ~/.senf
 		~/.senf/install.sh
