@@ -209,10 +209,12 @@ function senfUpdate() {
 }
 
 function senfReinstall() {
-	rm -rf ~/.senf
-	cd
-  	git clone https://github.com/smuellner/senf .senf
-  	~/.senf/install.sh
+	SENF_REPO=$(git remote --verbose | grep origin | grep fetch | cut -f2 | cut -d' ' -f1)
+	if [[ ! -z ${SENF_REPO} ]]; then 
+		rm -rf ~/.senf
+		git clone ${SENF_REPO} ~/.senf
+		~/.senf/install.sh
+	fi
 }
 
 #   Help
