@@ -1,3 +1,5 @@
+#!/bin/sh
+
 #  ---------------------------------------------------------------------------
 #
 #  Description:  This file initalizes the senf env.

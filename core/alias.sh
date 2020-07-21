@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # bundle
 alias bundle!="bundle install && rake install"
 alias be="bundle exec"
@@ -40,8 +42,6 @@ alias jdks='/usr/libexec/java_home -V'
 
 alias purge='sudo find . -name ".DS_Store" -depth -exec rm {} \;'
 alias X11='/opt/X11/bin/XQuartz &'
-alias SDUnmounter='sudo kextunload /System/Library/Extensions/AppleStorageDrivers.kext/Contents/PlugIns/AppleUSBCardReader.kext'
-alias SDRemounter='sudo kextunload /System/Library/Extensions/AppleStorageDrivers.kext/Contents/PlugIns/AppleUSBCardReader.kext; sudo kextload /System/Library/Extensions/AppleStorageDrivers.kext/Contents/PlugIns/AppleUSBCardReader.kext'
 
 alias cp='cp -iv'                          # Preferred 'cp' implementation
 alias mv='mv -iv'                          # Preferred 'mv' implementation

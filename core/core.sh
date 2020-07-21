@@ -1,3 +1,5 @@
+#!/bin/sh
+
 export SENF_PATH="${HOME}/.senf"
 export SENF_CORE_PATH=${SENF_PATH}/core
 export SENF_PLUGINS_PATH=${SENF_PATH}/plugins

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 case "${SENF_OS_NAME}" in
   "${SENF_OS_LINUX}")
 	powerline_cmd="powerline-go-linux-amd64"

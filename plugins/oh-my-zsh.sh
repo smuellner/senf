@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -d "$HOME/.oh-my-zsh" ]; then
 
 	# Path to your oh-my-zsh installation.
