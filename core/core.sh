@@ -115,7 +115,7 @@ function senfInstallError() {
 	fi
 }
 
-function senf() {
+function senfSummary() {
 	if [ ${#SENF_ADDONS[@]} -gt 0 ]; then
 		printHead "ADDONS"
 	fi

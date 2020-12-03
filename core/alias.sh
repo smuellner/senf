@@ -9,7 +9,7 @@ alias ri="rake install"
 
 # Git
 alias gc="git checkout"
-alias gco="git checkout"
+alias gco="git checkout origin"
 alias gcm="git checkout master"
 alias gpull="git pull"
 alias gpush="git push"
