@@ -1,6 +1,6 @@
 #!/bin/sh
 
-export ZSCALER_URL="http://localhost:9000/localproxy.pac"
+export ZSCALER_URL="http://127.0.0.1:9000/systemproxy.pac"
 export ZSCALER_PATH="/Applications/Zscaler"
 export ZSCALER_RUNTIME="${ZSCALER_PATH}/Zscaler.app/MacOS/Zscaler"
 
