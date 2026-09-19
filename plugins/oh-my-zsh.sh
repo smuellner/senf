@@ -2,6 +2,16 @@
 
 if [ -d "$HOME/.oh-my-zsh" ]; then
 
+	# Keep compinit compatible with Apple Silicon Homebrew and avoid stale
+	# Intel-era completion paths left behind by older installations.
+	if [ -n "${ZSH_VERSION:-}" ]; then
+		if [ -d "/opt/homebrew/share/zsh/site-functions" ]; then
+			fpath=("/opt/homebrew/share/zsh/site-functions" "${fpath[@]}")
+		fi
+		fpath=("${fpath[@]:#/usr/local/share/zsh/site-functions}")
+		export ZSH_COMPDUMP="${ZSH_COMPDUMP:-${ZDOTDIR:-$HOME}/.zcompdump-senf-${ZSH_VERSION}}"
+	fi
+
 	# Path to your oh-my-zsh installation.
 	export ZSH=$HOME/.oh-my-zsh
 
