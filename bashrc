@@ -22,7 +22,7 @@ plugins=(
 #   -------------------------------
 #   2.  INITIALIZE SENF ENV.
 #   -------------------------------
-source ${HOME}/.senf/initialize.sh
+source "${HOME}/.senf/initialize.sh"
 
 
 #   -------------------------------

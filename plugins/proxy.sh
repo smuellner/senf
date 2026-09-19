@@ -24,17 +24,16 @@ function showProxy() {
 }
 
 function autoDetectZscaler() {
-	if [[ -d "${ZSCALER_PATH}" ]]; then
-		if [[ -x "${ZSCALER_RUNTIME}" ]]; then
-			addSenfEnv "Zscaler" "${ZSCALER_PATH}"
-		fi
+	# Avoid a network request on systems without Zscaler installed.
+	if [[ ! -x "${ZSCALER_RUNTIME}" ]]; then
+		return
 	fi
+
+	addSenfEnv "Zscaler" "${ZSCALER_PATH}"
 	getHttpCode "${ZSCALER_URL}"
 	if [[ "${http_code}" == "200" ]]; then
 		setZScalerProxy
 	fi
 }
-
-autoDetectZscaler
 
 addSenf "proxy"

@@ -22,19 +22,20 @@ setPath "/opt/local/bin"
 setPath "/usr/local/git/bin"
 setPath "$HOME/bin"
 setPath "$HOME/.bin"
+setPath "${SENF_PATH}/bin"
 # Editor Paths
 setPath "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 setPath "/Applications/Xcode.app/Contents/Developer/usr/bin"
 
 setPath "/sw/bin/"
 
-setPath "/usr/local/Cellar/gems/2.0.0/bin"
-setPath "/usr/local/Cellar/ruby/2.2.0/bin"
+# setPath "/usr/local/Cellar/gems/2.0.0/bin"
+# setPath "/usr/local/Cellar/ruby/2.2.0/bin"
 # export GEM_HOME='/usr/local/Cellar/gems/2.0.0'
 
 #   Set Homebrew defaults
 #   ------------------------------------------------------------
-HOMEBREW_PATH="$HOME/homebrew"
+HOMEBREW_PATH="/opt/homebrew"
 if [[ -d $HOMEBREW_PATH ]]; then
 	setPath "$HOMEBREW_PATH/bin"
 	setLdLibraryPath "$HOMEBREW_PATH/lib"
@@ -72,8 +73,8 @@ fi
 #   Set Default Editor (change 'Nano' to the editor of your choice)
 #   Preferred editor for local and remote sessions
 #   ------------------------------------------------------------
-if [[ -n $SSH_CONNECTION ]]; then
-	export EDITOR=${EDITOR_CLI}
+if [[ -n ${SSH_CONNECTION:-} ]]; then
+	export EDITOR="${EDITOR_CLI:-nano}"
 else
-	export EDITOR=${EDITOR_UI}
+	export EDITOR="${EDITOR_UI:-${EDITOR_CLI:-nano}}"
 fi

@@ -1,11 +1,51 @@
-# Help - Using SENF
+# Help - Using senf
 
-| Command       | Description              |
-| ------------- |--------------------------|
-| `senf`        | Show environement         |
-| `senfHelp`    | The (this) help           |
-| `senfUpdate`  | Update the senf installation |
-| `senfReinstall`| Reinstall senf           |
+senf is a fast Bash/Zsh helper. Initialization only defines the core functions;
+optional plugins are loaded lazily.
+
+## Command interface
+
+| Command | Description |
+|---|---|
+| `senf doctor` | Check shell, tools, plugins, PATH, and startup health |
+| `senf plugins` | List registered and loaded plugins |
+| `senf plugin load NAME` | Load one plugin immediately |
+| `senf path` | Print PATH entries one per line |
+| `senf reload` | Show the command to reload the current shell |
+| `senf update` | Fast-forward update and reinstall dependencies |
+| `senf reinstall` | Safely replace the install while preserving a backup |
+| `senf help` | Open this help |
+
+Legacy function names remain available: `senfHelp`, `senfUpdate`, and
+`senfReinstall`.
+
+## Plugin API
+
+Plugins are shell files loaded on demand. They receive `SENF_PLUGIN_NAME`,
+`SENF_PLUGIN_DIR`, and `SENF_PLUGIN_API_VERSION`. A plugin should define its
+commands/functions without network or destructive work at file load time, then
+use the shared API when needed:
+
+```bash
+addSenf "my-plugin"
+addSenfEnv "MY_PLUGIN" "enabled"
+senf_plugin_register other-plugin
+senf_plugin_load other-plugin
+```
+
+Plugin loading is idempotent. Failed plugins are marked as failed and are not
+re-executed repeatedly on every prompt.
+
+## Examples
+
+```bash
+senf doctor
+senf reload
+setjdk 21
+proxy on
+proxy off
+proxy status
+```
 
 ## Shortcuts
 

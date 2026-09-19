@@ -1,9 +1,9 @@
 #!/bin/sh
 
-export SENF_PATH="${HOME}/.senf"
-export SENF_CORE_PATH=${SENF_PATH}/core
-export SENF_PLUGINS_PATH=${SENF_PATH}/plugins
-export SENF_USER_PLUGINS_PATH=${HOME}/.senf_plugins
+export SENF_PATH="${SENF_PATH:-${HOME}/.senf}"
+export SENF_CORE_PATH="${SENF_CORE_PATH:-${SENF_PATH}/core}"
+export SENF_PLUGINS_PATH="${SENF_PLUGINS_PATH:-${SENF_PATH}/plugins}"
+export SENF_USER_PLUGINS_PATH="${SENF_USER_PLUGINS_PATH:-${HOME}/.senf_plugins}"
 
 #   Detect OS
 #   ------------------------------------------------------------
@@ -25,10 +25,29 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
     ;;
 esac
 
+#   Detect CPU architecture for platform-specific tools
+#   ------------------------------------------------------------
+case $(uname -m) in
+  arm64|aarch64)
+    export SENF_ARCH_NAME="arm64"
+    ;;
+  x86_64|amd64)
+    export SENF_ARCH_NAME="amd64"
+    ;;
+  *)
+    export SENF_ARCH_NAME="$(uname -m | tr '[:upper:]' '[:lower:]')"
+    ;;
+esac
+
 #   Log output functions
 #   ------------------------------------------------------------
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+if [[ -t 2 ]] && command -v tput >/dev/null 2>&1; then
+	BOLD="$(tput bold 2>/dev/null || true)"
+	NORMAL="$(tput sgr0 2>/dev/null || true)"
+else
+	BOLD=""
+	NORMAL=""
+fi
 
 function printWithStyle() {
 	if [[ "$2" == "info" ]]; then
@@ -52,7 +71,7 @@ function printWithStyle() {
 	STARTCOLOR="\e[$COLOR"
 	ENDCOLOR="\e[0m"
 
-	printf "$STARTCOLOR%b$ENDCOLOR" "$1" 1>&2
+	printf '%b%b%b' "$STARTCOLOR" "$1" "$ENDCOLOR" 1>&2
 }
 
 function printHead() {
@@ -90,15 +109,26 @@ export SENF_ADDONS=()
 export SENF_ENV=()
 export SENF_ERRORS=()
 export SENF_INSTALL_ERRORS=()
+export SENF_LOADED_PLUGINS=()
+export SENF_PENDING_PLUGINS=()
+export SENF_FAILED_PLUGINS=()
+export SENF_PLUGIN_API_VERSION=1
+export SENF_LAZY_INITIALIZED=0
 
 function addSenf() {
 	if [[ -n $1 ]]; then
+		for addon in "${SENF_ADDONS[@]}"; do
+			[[ "$addon" == "$1" ]] && return 0
+		done
 		SENF_ADDONS+=("$1")
 	fi
 }
 
 function addSenfEnv() {
 	if [[ -n $1 ]]; then
+		for env_item in "${SENF_ENV[@]}"; do
+			[[ "$env_item" == "$1|\t$2" ]] && return 0
+		done
 		SENF_ENV+=("$1|\t$2")
 	fi
 }
@@ -164,14 +194,14 @@ function senfErrorSummary() {
 #   Path functions
 #   ------------------------------------------------------------
 function setPath() {
-	if [[ -d $1 ]]; then
-		export PATH=$PATH:$1
+	if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
+		export PATH="${PATH:+${PATH}:}$1"
 	fi
 }
 
 function setLdLibraryPath() {
-	if [ -d $1 ]; then
-		export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$1
+	if [[ -d "$1" ]] && [[ ":${LD_LIBRARY_PATH}:" != *":${1}:"* ]]; then
+		export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+${LD_LIBRARY_PATH}:}$1"
 	fi
 }
 
@@ -179,61 +209,169 @@ function setLdLibraryPath() {
 #   ------------------------------------------------------------
 
 function loadPlugins() {
-	for plugin in ${plugins[@]}; do
-		pluginPath="${SENF_PLUGINS_PATH}/${plugin}.sh"
-		if [[ -f ${pluginPath} ]]; then
-			source ${pluginPath}
-		else
-			senfError "Plugin '${plugin}' missing at '${pluginPath}'!"
-		fi
+	for plugin in "${plugins[@]}"; do
+		senfRegisterPlugin "$plugin"
 	done
 }
 
 function loadUserPlugins() {
-	for plugin in ${senf_plugins[@]}; do
-		pluginPath="${SENF_USER_PLUGINS_PATH}/${plugin}.sh"
-		if [[ -f ${pluginPath} ]]; then
-			source ${pluginPath}
-		else
-			senfError "Plugin '${plugin}' missing at '${pluginPath}'!"
+	for plugin in "${senf_plugins[@]}"; do
+		senfRegisterPlugin "$plugin" "${SENF_USER_PLUGINS_PATH}"
+	done
+}
+
+function senfRegisterPlugin() {
+	local plugin="$1"
+	local plugin_root="${2:-${SENF_PLUGINS_PATH}}"
+	local plugin_path="${plugin_root}/${plugin}.sh"
+	[[ -z "$plugin" ]] && return 0
+	if [[ ! -f "$plugin_path" && "$plugin_root" == "${SENF_PLUGINS_PATH}" ]]; then
+		plugin_path="${SENF_USER_PLUGINS_PATH}/${plugin}.sh"
+	fi
+	if [[ ! -f "$plugin_path" ]]; then
+		senfError "Plugin '${plugin}' missing at '${plugin_path}'!"
+		return 1
+	fi
+	for loaded in "${SENF_PENDING_PLUGINS[@]}" "${SENF_LOADED_PLUGINS[@]}"; do
+		[[ "$loaded" == "$plugin" ]] && return 0
+	done
+	SENF_PENDING_PLUGINS+=("$plugin")
+}
+
+# Stable plugin API aliases for third-party plugins.
+function senf_plugin_register() { senfRegisterPlugin "$@"; }
+function senf_plugin_load() { senfLoadPlugin "$@"; }
+
+function senfLoadPlugin() {
+	local plugin="$1"
+	local plugin_root="${2:-${SENF_PLUGINS_PATH}}"
+	local plugin_path="${plugin_root}/${plugin}.sh"
+	local pending
+	local load_status
+	[[ -z "$plugin" ]] && return 0
+	for loaded in "${SENF_LOADED_PLUGINS[@]}"; do
+		[[ "$loaded" == "$plugin" ]] && return 0
+	done
+	for failed in "${SENF_FAILED_PLUGINS[@]}"; do
+		[[ "$failed" == "$plugin" ]] && return 1
+	done
+	if [[ ! -f "$plugin_path" && "$plugin_root" == "${SENF_PLUGINS_PATH}" ]]; then
+		plugin_path="${SENF_USER_PLUGINS_PATH}/${plugin}.sh"
+	fi
+	if [[ ! -f "$plugin_path" ]]; then
+		senfError "Plugin '${plugin}' missing at '${plugin_path}'!"
+		return 1
+	fi
+	for pending in "${SENF_PENDING_PLUGINS[@]}"; do
+		if [[ "$pending" == "$plugin" ]]; then
+			SENF_PLUGIN_NAME="$plugin"
+			SENF_PLUGIN_DIR="$(dirname "$plugin_path")"
+			source "$plugin_path"
+			load_status=$?
+			if (( load_status != 0 )); then
+				SENF_FAILED_PLUGINS+=("$plugin")
+				return "$load_status"
+			fi
+			SENF_LOADED_PLUGINS+=("$plugin")
+			return 0
 		fi
 	done
+	return 0
+}
+
+function senfLoadAllPlugins() {
+	local plugin
+	local load_result=0
+	for plugin in "${SENF_PENDING_PLUGINS[@]}"; do
+		senfLoadPlugin "$plugin" || load_result=1
+	done
+	SENF_LAZY_INITIALIZED=1
+	return "$load_result"
+}
+
+function senfLazyInit() {
+	[[ "${SENF_LAZY_INITIALIZED:-0}" == 1 ]] && return 0
+	senfLoadAllPlugins
+	senfRefreshPrompt
+}
+
+function senfRefreshPrompt() {
+	if type powerline_precmd >/dev/null 2>&1; then
+		powerline_precmd
+	elif type _update_ps1 >/dev/null 2>&1; then
+		_update_ps1
+	fi
+}
+
+function senfLoadPromptPlugins() {
+	# Prompt providers must be ready before the first prompt is rendered.
+	# Other plugins remain lazy and load from senfLazyInit.
+	if [[ -n "${ZSH_VERSION:-}" ]]; then
+		senfLoadPlugin oh-my-zsh 2>/dev/null || true
+	fi
+	senfLoadPlugin powerline-shell 2>/dev/null || true
+	senfRefreshPrompt
+}
+
+function senfInstallLazyHook() {
+	if [[ -n "${ZSH_VERSION:-}" ]]; then
+		autoload -Uz add-zsh-hook 2>/dev/null
+		add-zsh-hook precmd senfLazyInit
+	elif [[ -n "${BASH_VERSION:-}" ]]; then
+		case ";${PROMPT_COMMAND:-};" in
+			*";senfLazyInit;"*) ;;
+			*) PROMPT_COMMAND="senfLazyInit${PROMPT_COMMAND:+;${PROMPT_COMMAND}}" ;;
+		esac
+	fi
 }
 
 #   Update
 #   ------------------------------------------------------------
 
 function senfUpdate() {
-	cd ${SENF_PATH}
-	git pull
-	./install.sh
-	cd -
+	(
+		cd "${SENF_PATH}" || return
+		command git pull --ff-only && command ./install.sh
+	)
 }
 
 function senfReinstall() {
-	cd ${SENF_PATH}
-	SENF_REPO=$(git remote --verbose | grep origin | grep fetch | cut -f2 | cut -d' ' -f1)
-	if [[ ! -z ${SENF_REPO} ]]; then 
+	local current_dir="$(pwd)"
+	local senf_repo
+	local backup_path="${SENF_PATH}.backup.$(date +%Y%m%d%H%M%S)"
+	senf_repo="$(cd "${SENF_PATH}" 2>/dev/null && command git remote get-url origin)"
+	if [[ -n "$senf_repo" ]]; then
 		printHead "Reinstall senf"
-		printInfo "${SENF_REPO}"
-		cd ${HOME}
-		rm -rf ${HOME}/.senf
-		git clone ${SENF_REPO} ${HOME}/.senf
-		${HOME}/.senf/install.sh
+		printInfo "${senf_repo}"
+		if mv "${SENF_PATH}" "${backup_path}" && command git clone "$senf_repo" "${SENF_PATH}"; then
+			"${SENF_PATH}/install.sh"
+			printInfo "Previous installation preserved at ${backup_path}"
+		else
+			printError "Reinstall failed; restoring previous installation"
+			[[ -d "${SENF_PATH}" ]] && mv "${SENF_PATH}" "${SENF_PATH}.failed.$(date +%s)"
+			mv "$backup_path" "${SENF_PATH}"
+			return 1
+		fi
 	fi
+	cd "$current_dir" || return
 }
 
 #   Help
 #   ------------------------------------------------------------
 function senfHelp() {
-	less ${SENF_PATH}/HELP.md
+	if [[ -t 1 ]] && command -v less >/dev/null 2>&1; then
+		less "${SENF_PATH}/HELP.md"
+	else
+		command cat "${SENF_PATH}/HELP.md"
+	fi
 }
 
 #   Http operations
 #   ------------------------------------------------------------
 function getHttpCode() {
 	local http_url="$1"
-	http_code=$(curl --write-out %{http_code} --silent --output /dev/null "$http_url")
+	http_code=$(curl --write-out '%{http_code}' --silent \
+		--connect-timeout 0.3 --max-time 1 --output /dev/null "$http_url")
 }
 
 #   Default application functions
@@ -257,7 +395,8 @@ _mate='/Applications/TextMate.app/Contents/Resources/mate'
 _brackets_installed='/usr/local/bin/brackets'
 _brackets='/Applications/Brackets.app/Contents/Resources/brackets.sh'
 function setDefaultEditorUI() {
-    local possibleEditorUIs=(
+	[[ "${SENF_EDITOR_DETECTED:-0}" == 1 ]] && return 0
+	local possibleEditorUIs=(
 		"${_code_installed}"
 		"${_code}"
 		"${_atom_installed}"
@@ -273,13 +412,15 @@ function setDefaultEditorUI() {
 		export EDITOR_UI="${defaultBinaryPath}"
 		addSenfEnv "EDITOR_UI" "${defaultBinaryPath}"
 	fi
+	SENF_EDITOR_DETECTED=1
 }
 
 _gittower_installed='/usr/local/bin/gittower'
 _gittower='/Applications/Tower.app/Contents/MacOS/gittower'
 _stree='/Applications/SourceTree.app/Contents/Resources/stree'
 function setDefaultGitUI() {
-    local possibleGitUIs=(
+	[[ "${SENF_GIT_UI_DETECTED:-0}" == 1 ]] && return 0
+	local possibleGitUIs=(
 		"${_gittower}"
 		"${_gittower_installed}"
 		"${_stree}"
@@ -289,6 +430,7 @@ function setDefaultGitUI() {
 		export GIT_UI="${defaultBinaryPath}"
 		addSenfEnv "GIT_UI" "${defaultBinaryPath}"
 	fi
+	SENF_GIT_UI_DETECTED=1
 }
 
 #   set Defaults

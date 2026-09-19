@@ -75,7 +75,7 @@ if [ -d "$HOME/.oh-my-zsh" ]; then
 		git
 		bundler
 		dotenv
-		osx
+		macos
 		z
 	)
 

@@ -13,16 +13,16 @@
 #   1.  INCLUDE PLUGINS
 #   -------------------------------
 plugins=(
+	oh-my-zsh
 	powerline-shell
 	path_helper
-    oh-my-zsh
 	proxy
 )
 
 #   -------------------------------
 #   2.  INITIALIZE SENF ENV.
 #   -------------------------------
-source ${HOME}/.senf/initialize.sh
+source "${HOME}/.senf/initialize.sh"
 
 
 #   -------------------------------

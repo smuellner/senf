@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" role="img" aria-labelledby="title desc">
+  <title id="title">senf logo</title>
+  <desc id="desc">A golden mustard seed with a green leaf inside a terminal prompt</desc>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd84d"/>
+      <stop offset="1" stop-color="#e09b18"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#2f7657"/>
+      <stop offset="1" stop-color="#71b85c"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="224" height="224" rx="52" fill="#17231f"/>
+  <path d="M49 93 82 120 49 147" fill="none" stroke="#f5f0dc" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M103 158h67" fill="none" stroke="#f5f0dc" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="151" cy="94" r="34" fill="url(#gold)"/>
+  <path d="M151 94c13-28 36-38 58-35-4 24-18 48-58 35Z" fill="url(#green)"/>
+  <path d="M151 94c-1 16-7 29-18 40" fill="none" stroke="#2f7657" stroke-width="6" stroke-linecap="round"/>
+</svg>
