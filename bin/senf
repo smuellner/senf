@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+senf_root="${SENF_PATH:-${HOME}/.senf}"
+plugins=()
+senf_plugins=()
+export SENF_PATH="$senf_root"
+export SENF_SKIP_USER_PROFILE=1
+source "${senf_root}/initialize.sh"
+senf "$@"

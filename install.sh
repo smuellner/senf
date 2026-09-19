@@ -7,6 +7,9 @@ set -u
 SENF_PATH="${HOME}/.senf"
 SENF_BIN_PATH="${HOME}/.senf/bin"
 mkdir -p "${SENF_BIN_PATH}/"
+if [ -f "${SENF_PATH}/bin/senf" ]; then
+	chmod 755 "${SENF_PATH}/bin/senf"
+fi
 
 if ! command -v git >/dev/null 2>&1 || ! command -v curl >/dev/null 2>&1; then
 	echo "❌ senf requires git and curl" >&2
