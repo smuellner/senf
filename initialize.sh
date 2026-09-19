@@ -52,6 +52,7 @@ fi
 if [[ "${SENF_SKIP_USER_PROFILE:-0}" != 1 ]] && test -e "${HOME}/.senf_profile"; then
 	source "${HOME}/.senf_profile"
 fi
+senfNormalizePath
 
 #   -------------------------------
 #   6.  LOAD PLUGINS

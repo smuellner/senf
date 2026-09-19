@@ -205,6 +205,26 @@ function setLdLibraryPath() {
 	fi
 }
 
+function senfNormalizePath() {
+	if [[ -n "${ZSH_VERSION:-}" ]]; then
+		typeset -U path
+	else
+		local entry
+		local normalized=""
+		local old_ifs="$IFS"
+		IFS=':'
+		for entry in ${PATH}; do
+			[[ -z "$entry" ]] && continue
+			case ":${normalized}:" in
+				*":${entry}:"*) ;;
+				*) normalized="${normalized:+${normalized}:}${entry}" ;;
+			esac
+		done
+		IFS="$old_ifs"
+		export PATH="$normalized"
+	fi
+}
+
 #   Plugins
 #   ------------------------------------------------------------
 

@@ -26,12 +26,31 @@ function e() {
 #   ------------------------------------------------------------
 function setjdk() {
   if [ $# -ne 0 ]; then
+    local requestedVersion="$*"
+    local cacheDir="${XDG_CACHE_HOME:-${HOME}/.cache}/senf"
+    local cacheFile="${cacheDir}/java-home-${requestedVersion//[^[:alnum:]._-]/_}"
+    local cachedHome=""
     removeFromPath '/System/Library/Frameworks/JavaVM.framework/Home/bin'
     if [ -n "${JAVA_HOME+x}" ]; then
-      removeFromPath $JAVA_HOME
+      removeFromPath "$JAVA_HOME"
     fi
-    export JAVA_HOME=$(/usr/libexec/java_home -v $@)
-    export PATH=$JAVA_HOME/bin:$PATH
+    if [ -r "$cacheFile" ]; then
+      cachedHome="$(command cat "$cacheFile")"
+    fi
+    if [ -n "$cachedHome" ] && [ -x "$cachedHome/bin/java" ]; then
+      export JAVA_HOME="$cachedHome"
+    elif [ -x /usr/libexec/java_home ]; then
+      export JAVA_HOME="$(/usr/libexec/java_home -v "$@")"
+      if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+        if command mkdir -p "$cacheDir" 2>/dev/null && [ -d "$cacheDir" ]; then
+          printf '%s\n' "$JAVA_HOME" > "$cacheFile" 2>/dev/null || true
+        fi
+      fi
+    else
+      printError "Java runtime selector not found"
+      return 1
+    fi
+    export PATH="$JAVA_HOME/bin:$PATH"
   else
     /usr/libexec/java_home -V
     printInfo $JAVA_HOME
